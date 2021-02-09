@@ -111,13 +111,17 @@ app.post('/users/:username/movies/:title', (req, res) => {
   res.send('POST request successful - added movie to list');
 });
 
-app.delete('/user/:username/movies/:title', (res, req) => {
+app.delete('/users/:username/movies/:title', (req, res) => {
   res.send('DELETE request successful - movie removed');
 });
 
-app.delete('/user/:username', (req, res) => {
+app.delete('/users/:username', (req, res) => {
   res.send('DELETE request successful - user account terminated');
 });
+
+// app.get('/test-search/:data', (req, res) => {
+//   let response = movies.filter(movie => movie.title.toLowerCase().includes(req.params.data.toLowerCase()))
+// })
 
 app.listen(8022, () => {
   console.log('App is listening on port 8022');
