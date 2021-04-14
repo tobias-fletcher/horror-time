@@ -156,7 +156,7 @@ app.post('/users/:Username/Movies/:MovieID', (req, res) => {
   });
 });
 
-app.delete('/users/:username/movies/:title', (req, res) => {
+app.delete('/users/:username/movies/:MovieID', (req, res) => {
   let user = req.params.Username;
   let favmovie = req.params.MovieID;
 
