@@ -4,11 +4,15 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 const app = express();
+const cors = require('cors');
+const { check, validationResult} = require('express-validator');
 app.use(morgan('common'));
 
 app.use(express.static('Public'));
 
 app.use(bodyParser.json());
+
+app.use(cors());
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -75,7 +79,19 @@ app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }),
   })
 });
 
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users',
+  [
+  check('Username', 'Username is required').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail(),
+  ], (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()});
+    }
+  }
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({Username: req.body.Username})
   .then((user) => {
     if(user) {
@@ -84,7 +100,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
       Users
         .create({
           Username:req.body.Username,
-          Password: req.body.Password, 
+          Password: hashedPassword, 
           Email: req.body.Email,
           Birthday: req.body.Birthday
         })
@@ -102,7 +118,7 @@ app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) 
   });
 });
 
-app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/users', (req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -204,6 +220,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 //   let response = movies.filter(movie => movie.title.toLowerCase().includes(req.params.data.toLowerCase()))
 // })
 
-app.listen(8000, () => {
-  console.log('App is listening on port 8000');
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port' + port);
 });
