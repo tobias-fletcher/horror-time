@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -5,6 +6,7 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const app = express();
 const cors = require('cors');
+const config = require('./config');
 const { check, validationResult} = require('express-validator');
 app.use(morgan('common'));
 
@@ -18,7 +20,8 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const passport = require('passport');
 require('./passport');
-mongoose.connect('mongodb://localhost:27017/horror-time', {useNewUrlParser: true, useUnifiedTopology:true});
+mongoose.connect(config.DB_CONNECT, {useNewUrlParser: true, useUnifiedTopology:true});
+//mongoose.connect('mongodb://localhost:27017/horror-time', {useNewUrlParser: true, useUnifiedTopology:true});
 
 let auth = require('./auth')(app);
 
@@ -90,7 +93,7 @@ app.post('/users',
     if (!errors.isEmpty()) {
       return res.status(422).json({errors: errors.array()});
     }
-  }
+  //}
   let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOne({Username: req.body.Username})
   .then((user) => {
@@ -141,10 +144,11 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 });
 
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password); 
   Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
       Username: req.body.Username,
-      Password: req.body.Password,
+      Password: hashedPassword,
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
@@ -160,7 +164,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   });
 });
 
-app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
      $push: { FavoriteMovies: req.params.MovieID }
    },
@@ -176,7 +180,7 @@ app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { sess
 });
 
 app.delete('/users/:username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
-  let user = req.params.Username;
+  let user = req.params.username;
   let favmovie = req.params.MovieID;
 
   Users.findOneAndUpdate({Username: user},

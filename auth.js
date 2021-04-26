@@ -1,10 +1,10 @@
-const jwtSecret = 'your_jwt_secret'; 
+const config = require('./config');
+const jwtSecret = config.JWT_SECRET; 
 
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 
 require('./passport'); 
-
 
 let generateJWTToken = (user) => {
   return jwt.sign(user, jwtSecret, {
@@ -13,7 +13,6 @@ let generateJWTToken = (user) => {
     algorithm: 'HS256' 
   });
 }
-
 
 /* POST login. */
 module.exports = (router) => {
@@ -35,3 +34,11 @@ module.exports = (router) => {
     })(req, res);
   });
 }
+
+
+
+//mongoimport --uri mongodb+srv://horrorTimeadmin:Pulsar_07@cluster0.lfvar.mongodb.net/horrorTimeadmindb --collection movies --type JSON --file C:\Users\tobia\Desktop\2.7\movies
+
+
+
+
