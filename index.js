@@ -25,6 +25,7 @@ mongoose.connect(config.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology:
 
 let auth = require('./auth')(app);
 
+
 //get requests
 app.get('/', (req, res) => {
   res.send('Welcome to Horror Time');
@@ -221,7 +222,6 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 //   let response = movies.filter(movie => movie.title.toLowerCase().includes(req.params.data.toLowerCase()))
 // })
 
-const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
-  console.log('Listening on Port' + port);
+app.listen(Config.PORT, '0.0.0.0', () => {
+  console.log('Listening on Port ' + Config.PORT);
 });
