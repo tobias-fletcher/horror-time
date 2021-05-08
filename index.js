@@ -14,7 +14,7 @@ app.use(express.static('Public'));
 
 app.use(bodyParser.json());
 
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com'];
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com/login'];
 
 app.use(cors({
   origin: (origin, callback) => {
