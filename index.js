@@ -86,7 +86,7 @@ app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }),
 });
 
 //adds new user
-app.post('/register',
+app.post('/users',
   [
     check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
