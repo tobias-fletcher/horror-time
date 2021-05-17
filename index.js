@@ -12,8 +12,9 @@ app.use(morgan('common'));
 
 app.use(express.static('Public'));
 
-let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com/login', 'http://localhost:5000'];
+app.use(bodyParser.json());
 
+let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com/login', 'http://localhost:5000'];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -25,8 +26,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-app.use(bodyParser.json());
-
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -44,7 +43,7 @@ app.get('/', (req, res) => {
 });
 
 //get list of data of movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movie) => {
       res.status(201).json(movie);
