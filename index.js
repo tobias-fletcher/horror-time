@@ -12,9 +12,8 @@ app.use(morgan('common'));
 
 app.use(express.static('Public'));
 
-app.use(bodyParser.json());
-
 let allowedOrigins = ['http://localhost:8080', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com/login', 'http://localhost:5000'];
+
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -26,6 +25,8 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+app.use(bodyParser.json());
+
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -88,7 +89,7 @@ app.get('/movies/genre/:name', passport.authenticate('jwt', { session: false }),
 //adds new user
 app.post('/users',
   [
-    check('Username', 'Username is required').not().isEmpty(),
+    check('Username', 'Username is required').isLength({ min: 5 }),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail(),
