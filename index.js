@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 });
 
 //get list of data of movies
-app.get('/movies', function {
+app.get('/movies', function (req, res) {
   Movies.find()
     .then((movie) => {
       res.status(201).json(movie);
