@@ -160,7 +160,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
       Username: req.body.Username,
       Password: hashedPassword,
       Email: req.body.Email,
-      //Birthdate: req.body.Birthdate
+      Birthdate: req.body.Birthdate
     }
   },
     { new: true },
