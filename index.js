@@ -162,17 +162,14 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (r
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
-  },
-    { new: true },
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    });
-});
+  }, { new: true })
+    .then(user => {
+      if (!user) return
+      res.status(400).send(req.params.Username + ' was not found');
+    }).catch(err => {
+      res.status(500).send(`Error: ${err.stack}`)
+    })
+})
 
 //adds fav movie by id
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
