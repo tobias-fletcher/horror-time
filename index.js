@@ -154,15 +154,14 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 //updates user
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   let hashedPassword = Users.hashPassword(req.body.Password);
-  Users.findOneAndUpdate({ Username: req.params.Username }, {
-    $set:
+  Users.findOneAndUpdate({ Username: req.params.Username },
     {
       Username: req.body.Username,
       Password: hashedPassword,
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
-  }, { new: true })
+    , { new: true })
     .then(user => {
       if (!user) return
       res.status(400).send(req.params.Username + ' was not found');
