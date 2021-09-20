@@ -14,7 +14,7 @@ app.use(express.static('Public'));
 
 app.use(bodyParser.json());
 
-let allowedOrigins = ['http://localhost:8080', 'https://itshorrortime.herokuapp.com/users', 'http://localhost:1234', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com/login', 'http://localhost:5000', 'http://localhost:4200'];
+let allowedOrigins = ['http://localhost:8080', 'https://itshorrortime.herokuapp.com/users', 'http://localhost:1234', 'http://localhost:1234', 'https://itshorrortime.herokuapp.com/login', 'http://localhost:5000', 'http://localhost:4200', 'https://tobias-fletcher.github.io'];
 
 app.use(cors({
   origin: (origin, callback) => {
